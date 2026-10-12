@@ -1,0 +1,71 @@
+# =======================
+# VulnWatch .gitignore
+# =======================
+
+# ─── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+build/
+*.whl
+venv/
+.venv/
+env/
+backend/venv/
+*.log
+.ruff_cache/
+.mypy_cache/
+
+# ─── Node / Frontend ──────────────────────────────────────
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─── Environment & Secrets ────────────────────────────────
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# ─── Local SQLite Database & WAL Cache ────────────────────
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+vulnwatch.db
+
+# ─── Test Reports & Artifacts ─────────────────────────────
+reports/
+reports/*.xml
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ─── OS & Editor Files ────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*.bak
+

@@ -1,0 +1,141 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Global base ──────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    @apply bg-surface-900 text-zinc-100 text-base leading-relaxed;
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    color-scheme: dark;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar        { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track  { @apply bg-surface-950; }
+  ::-webkit-scrollbar-thumb  { @apply bg-surface-600 rounded; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-surface-500; }
+
+  /* Input resets */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  details > summary { list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+}
+
+/* ─── Reusable component classes ───────────────────────────────────────────── */
+@layer components {
+
+  /* Enterprise graphite card styling */
+  .card {
+    @apply bg-surface-800 border border-surface-600/80 rounded-lg p-6 shadow-sm;
+  }
+
+  .card-sm {
+    @apply bg-surface-800 border border-surface-600/80 rounded-md p-4 shadow-sm;
+  }
+
+  .card-subtle {
+    @apply bg-surface-850 border border-surface-600/60 rounded-md p-5;
+  }
+
+  /* Buttons — 16px minimum */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 bg-brand-500 hover:bg-brand-600 active:bg-brand-700
+           text-zinc-950 text-base font-semibold rounded-md
+           transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2
+           focus:ring-offset-surface-900
+           disabled:opacity-40 disabled:cursor-not-allowed select-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 bg-surface-750 hover:bg-surface-700 active:bg-surface-600
+           border border-surface-600 text-zinc-100 hover:text-white text-base font-medium rounded-md
+           transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2
+           focus:ring-offset-surface-900
+           disabled:opacity-40 disabled:cursor-not-allowed select-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-1.5
+           px-3.5 py-2 bg-transparent hover:bg-surface-750 active:bg-surface-700
+           text-zinc-300 hover:text-zinc-100 text-base font-medium rounded-md
+           transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-zinc-600
+           disabled:opacity-40 disabled:cursor-not-allowed select-none;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 bg-red-900/70 hover:bg-red-800/80 active:bg-red-700/80
+           border border-red-700/80 text-red-100 text-base font-semibold rounded-md
+           transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-surface-900;
+  }
+
+  /* Form inputs — 16–17px */
+  .input {
+    @apply w-full px-4 py-2.5 bg-surface-850 border border-surface-600 rounded-md
+           text-base text-zinc-100 placeholder-zinc-500 font-sans
+           focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500
+           transition-colors duration-150;
+  }
+
+  .input-mono {
+    @apply font-mono text-[15px];
+  }
+
+  .input-error {
+    @apply border-red-600/80 focus:border-red-500 focus:ring-red-500;
+  }
+
+  .label {
+    @apply block text-base font-medium text-zinc-200 mb-2;
+  }
+
+  /* Tables — 15–16px content, 14px uppercase headers */
+  .table-container {
+    @apply w-full overflow-x-auto border border-surface-600/80 rounded-lg bg-surface-800;
+  }
+
+  .table-th {
+    @apply text-left px-5 py-3.5 bg-surface-850 text-zinc-400 font-semibold text-[14px] tracking-wider uppercase border-b border-surface-600/80 whitespace-nowrap;
+  }
+
+  .table-td {
+    @apply px-5 py-3.5 text-[15px] text-zinc-200;
+  }
+
+  .table-row {
+    @apply border-b border-surface-600/40 hover:bg-surface-750/50 transition-colors;
+  }
+
+  /* Technical code & evidence block — 14–15px monospace */
+  .code-block {
+    @apply font-mono text-[14px] leading-relaxed bg-surface-950 border border-surface-600/80 rounded-md p-4 text-zinc-200 overflow-x-auto;
+  }
+}
