@@ -228,3 +228,5 @@ When deploying directly on Windows via Jenkins, observe the following configurat
 - VulnWatch is strictly an educational tool.
 - Offensive security functionality (SQL injection exploitation, credential brute-forcing, XSS payloads) is prohibited.
 - Scanning is restricted to local (`localhost`, `127.0.0.1`) and explicitly owned/authorized applications.
+
+<!-- Jenkins auto-trigger test -->
