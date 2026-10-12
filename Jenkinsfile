@@ -17,5 +17,4 @@
  *   6. Automated Tests: Pytest unit & integration tests
  *   7. Deploy: Direct Windows deployment using Python (stops previous instance, launches app, verifies health)
  */
-
-Jenkinsfile
+ 
