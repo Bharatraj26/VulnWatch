@@ -1,20 +1,109 @@
-/*
- * VulnWatch — Jenkins CI/CD Pipeline (Windows Native Execution)
- * ===============================================================
- * Automated pipeline for Python + Flask, HTML/CSS/JS, SQLite stack.
- *
- * Requirements on Windows Jenkins Agent:
- *   - Git (configured in Jenkins tool configuration)
- *   - Python 3.11+ available in system PATH
- *   - Node.js 18+ & npm available in system PATH (for building frontend assets)
- *
- * Pipeline Stages:
- *   1. Checkout: Retrieve source code from GitHub
- *   2. Setup & Dependencies: Create Python venv and install requirements
- *   3. Build Frontend: Compile UI assets into frontend/dist
- *   4. Code Quality Checks: Ruff static analysis
- *   5. Security Analysis: Bandit static security audit
- *   6. Automated Tests: Pytest unit & integration tests
- *   7. Deploy: Direct Windows deployment using Python (stops previous instance, launches app, verifies health)
- */
- 
+
+pipeline {
+    agent any
+
+    environment {
+        PYTHON_HOME = 'C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313'
+        PYTHON_VENV = "${WORKSPACE}\\backend\\venv"
+        PYTHON_EXE = "${WORKSPACE}\\backend\\venv\\Scripts\\python.exe"
+        RUFF_EXE = "${WORKSPACE}\\backend\\venv\\Scripts\\ruff.exe"
+        BANDIT_EXE = "${WORKSPACE}\\backend\\venv\\Scripts\\bandit.exe"
+        PYTEST_EXE = "${WORKSPACE}\\backend\\venv\\Scripts\\pytest.exe"
+    }
+
+    stages {
+        stage('Verify Tools') {
+            steps {
+                bat '''
+                    @echo off
+                    "%PYTHON_HOME%\\python.exe" --version
+                    if errorlevel 1 exit /b 1
+                    where.exe git
+                    if errorlevel 1 exit /b 1
+                    where.exe npm
+                    if errorlevel 1 exit /b 1
+                    call npm --version
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+        }
+
+        stage('Install Backend Dependencies') {
+            steps {
+                bat '''
+                    @echo off
+                    if not exist "%PYTHON_VENV%\\Scripts\\python.exe" (
+                        "%PYTHON_HOME%\\python.exe" -m venv "%PYTHON_VENV%"
+                        if errorlevel 1 exit /b 1
+                    )
+                    "%PYTHON_EXE%" -m pip install --upgrade pip
+                    if errorlevel 1 exit /b 1
+                    "%PYTHON_EXE%" -m pip install -r backend\\requirements.txt
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    bat '''
+                        @echo off
+                        call npm ci --no-audit
+                        if errorlevel 1 exit /b 1
+                        call npm run type-check
+                        if errorlevel 1 exit /b 1
+                        call npm run build
+                        if errorlevel 1 exit /b 1
+                    '''
+                }
+            }
+        }
+
+        stage('Code Quality - Ruff') {
+            steps {
+                bat '''
+                    @echo off
+                    "%PYTHON_EXE%" -m ruff check backend\\ tests\\
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+        }
+
+        stage('Security - Bandit') {
+            steps {
+                bat '''
+                    @echo off
+                    "%PYTHON_EXE%" -m bandit -r backend\\app\\ -ll
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+        }
+
+        stage('Automated Tests - Pytest') {
+            steps {
+                bat '''
+                    @echo off
+                    if not exist reports mkdir reports
+                    "%PYTHON_EXE%" -m pytest -v --junitxml=reports\\pytest-results.xml
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+            post {
+                always {
+                    junit testResults: 'reports/pytest-results.xml',
+                          allowEmptyResults: true
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'VulnWatch CI checks passed.'
+        }
+        failure {
+            echo 'VulnWatch CI checks failed. Review the stage logs.'
+        }
+    }
+}
