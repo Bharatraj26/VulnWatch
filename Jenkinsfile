@@ -1,4 +1,4 @@
-
+```groovy
 pipeline {
     agent any
 
@@ -97,7 +97,7 @@ pipeline {
             }
         }
 
-         stage('Deploy VulnWatch') {
+        stage('Deploy VulnWatch') {
             steps {
                 powershell '''
                     $ErrorActionPreference = "Stop"
@@ -119,3 +119,4 @@ pipeline {
         }
     }
 }
+```
