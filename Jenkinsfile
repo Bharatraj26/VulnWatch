@@ -97,12 +97,12 @@ pipeline {
             }
         }
 
-        stage('Deploy VulnWatch') {
+         stage('Deploy VulnWatch') {
             steps {
                 powershell '''
                     $ErrorActionPreference = "Stop"
                     & "$env:WORKSPACE\\scripts\\deploy.ps1"
-                    if ($LASTEXITCODE -ne 0) {
+                    if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
                         throw "Deployment failed."
                     }
                 '''
