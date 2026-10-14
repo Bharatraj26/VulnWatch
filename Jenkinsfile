@@ -96,14 +96,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy VulnWatch') {
+            steps {
+                powershell '''
+                    $ErrorActionPreference = "Stop"
+                    & "$env:WORKSPACE\\scripts\\deploy.ps1"
+                    if ($LASTEXITCODE -ne 0) {
+                        throw "Deployment failed."
+                    }
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'VulnWatch CI checks passed.'
+            echo 'VulnWatch CI checks and deployment completed successfully.'
         }
         failure {
-            echo 'VulnWatch CI checks failed. Review the stage logs.'
+            echo 'VulnWatch pipeline failed. Review the stage logs.'
         }
     }
 }
